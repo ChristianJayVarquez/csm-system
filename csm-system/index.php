@@ -21,7 +21,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
     <div class="container mt-4">
         <h1>CSM Consolidated Report</h1>
         <!-- Add this button to trigger the modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csmModal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csmModal" style="width: auto; padding: 5px 10px; font-size: 14px;">
             Add CSM Results
         </button>
 
@@ -96,7 +96,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                             <div class="border rounded p-3 shadow-sm">
                                 <h6 class="text-primary">Service Quality Dimensions</h6>
                                 <div class="mb-3">
-                                    <label class="form-label">Responsiveness</label>
+                                    <label class="form-label">SQD1: Responsiveness</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="responsiveness" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -118,7 +118,167 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                         <label class="form-check-label">Strongly Disagree</label>
                                     </div>
                                 </div>
-                                <!-- Repeat for other dimensions -->
+                                <div class="mb-3">
+                                    <label class="form-label">SQD2: Reliability</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="reliability" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="reliability" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="reliability" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="reliability" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="reliability" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD3: Access and Facilities</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="access" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="access" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="access" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="access" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="access" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD4: Communication</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="communication" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="communication" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="communication" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="communication" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="communication" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD5: Costs</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="costs" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="costs" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="costs" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="costs" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="costs" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD6: Integrity</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="integrity" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="integrity" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="integrity" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="integrity" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="integrity" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD7: Assurance</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="assurance" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="assurance" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="assurance" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="assurance" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="assurance" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD8: Outcome</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="outcome" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="outcome" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="outcome" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="outcome" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="outcome" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -131,7 +291,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
             </div>
         </div>
 
-        <h3>Citizen's Charter Awareness</h3>
+        <h3>Citizen's Charter Questions</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
