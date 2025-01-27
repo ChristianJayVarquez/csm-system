@@ -25,28 +25,104 @@ $service_data = $conn->query("SELECT * FROM service_quality");
             Add CSM Results
         </button>
 
-        <!-- Bootstrap Modal for CSM Results -->
         <div class="modal fade" id="csmModal" tabindex="-1" aria-labelledby="csmModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="csmModalLabel">Add CSM Results</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="POST" action="save_results.php">
                         <div class="modal-body">
-                            <!-- Input fields for CSM Results -->
-                            <div class="mb-3">
-                                <label for="response1" class="form-label">Response 1</label>
-                                <input type="text" class="form-control" id="response1" name="response1" required>
+                            <!-- Citizen's Charter Questions Section -->
+                            <div class="border rounded p-3 mb-4 shadow-sm">
+                                <h6 class="text-primary">Citizen's Charter Questions</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">CC1. Which of the following describes your awareness of the CC?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc1" value="I know what a CC is and I saw this office's CC" required>
+                                        <label class="form-check-label">I know what a CC is and I saw this office's CC</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc1" value="I know what a CC is but I did not see this office's CC">
+                                        <label class="form-check-label">I know what a CC is but I did not see this office's CC</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc1" value="I learned of the CC only when I saw this office's CC">
+                                        <label class="form-check-label">I learned of the CC only when I saw this office's CC</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc1" value="I do not know what a CC is and I did not see this office's CC">
+                                        <label class="form-check-label">I do not know what a CC is and I did not see this office's CC</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">CC2. If aware of CC, would you say that the CC of this office was...?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc2" value="Easy to see" required>
+                                        <label class="form-check-label">Easy to see</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc2" value="Somewhat easy to see">
+                                        <label class="form-check-label">Somewhat easy to see</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc2" value="Difficult to see">
+                                        <label class="form-check-label">Difficult to see</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc2" value="Not visible at all">
+                                        <label class="form-check-label">Not visible at all</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">CC3. If aware of CC, how much did the CC help you in your transaction?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc3" value="Helped very much" required>
+                                        <label class="form-check-label">Helped very much</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc3" value="Somewhat helped">
+                                        <label class="form-check-label">Somewhat helped</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="cc3" value="Did not help">
+                                        <label class="form-check-label">Did not help</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="response2" class="form-label">Response 2</label>
-                                <input type="text" class="form-control" id="response2" name="response2" required>
+
+                            <!-- Service Quality Dimensions Section -->
+                            <div class="border rounded p-3 shadow-sm">
+                                <h6 class="text-primary">Service Quality Dimensions</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Responsiveness</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="responsiveness" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="responsiveness" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="responsiveness" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="responsiveness" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="responsiveness" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                </div>
+                                <!-- Repeat for other dimensions -->
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <!-- Inline small buttons with custom colors -->
+
+                        <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" style="width: 80px;">Cancel</button>
                             <button type="submit" class="btn btn-sm btn-success" style="width: 80px;">Save</button>
                         </div>
