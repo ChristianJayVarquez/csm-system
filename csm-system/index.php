@@ -1,6 +1,34 @@
 <?php
 include 'db.php';
 
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'] ?? '';
+    $gender = $_POST['gender'] ?? '';
+    $age = $_POST['age'] ?? 0;
+
+    $stmt = $conn->prepare("INSERT INTO results (name, gender, age) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $name, $gender, $age);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Fetch demographic data
+$genderCounts = $conn->query("SELECT gender, COUNT(*) as count FROM results GROUP BY gender");
+$ageGroups = $conn->query("SELECT 
+    CASE 
+        WHEN age BETWEEN 0 AND 18 THEN '0-18'
+        WHEN age BETWEEN 19 AND 35 THEN '19-35'
+        WHEN age BETWEEN 36 AND 60 THEN '36-60'
+        ELSE '60+' 
+    END as age_group, 
+    COUNT(*) as count 
+    FROM results 
+    GROUP BY age_group");
+
+// Fetch results for the table
+$results = $conn->query("SELECT * FROM results");
+
 // Fetch Data
 $cc_data = $conn->query("SELECT * FROM cc_awareness");
 $service_data = $conn->query("SELECT * FROM service_quality");
@@ -52,6 +80,24 @@ $service_data = $conn->query("SELECT * FROM service_quality");
 <body>
     <div class="container mt-4">
         <h1>CSM Consolidated Report</h1>
+
+        <!-- Demographics Section -->
+        <div class="mb-4 p-4 bg-light rounded">
+            <h2>Demographic Distribution</h2>
+            <h4>Gender Distribution</h4>
+            <ul>
+                <?php while ($row = $genderCounts->fetch_assoc()): ?>
+                    <li><?= ucfirst($row['gender']) ?>: <?= $row['count'] ?> people</li>
+                <?php endwhile; ?>
+            </ul>
+            <h4>Age Distribution</h4>
+            <ul>
+                <?php while ($row = $ageGroups->fetch_assoc()): ?>
+                    <li><?= $row['age_group'] ?> years: <?= $row['count'] ?> people</li>
+                <?php endwhile; ?>
+            </ul>
+        </div>
+        
         <!-- Add this button to trigger the modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csmModal" style="width: auto; padding: 5px 10px; font-size: 14px;">
             Add CSM Results
@@ -66,6 +112,30 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                     </div>
                     <form method="POST" action="save_results.php">
                         <div class="modal-body">
+                            <!-- Demographic Distribution -->
+                            <div class="border rounded p-3 mb-4 shadow-sm">
+                                <div class="row">
+                                    <!-- Gender Column -->
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Gender</label><br>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input custom-radio" id="male" name="gender" value="male" required>
+                                            <label for="male">Male</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input custom-radio" id="female" name="gender" value="female">
+                                            <label for="female">Female</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Age Column -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="age" class="form-label">Age</label>
+                                        <input type="number" class="form-control" id="age" name="age" required style="width: 60px; height: 30px; padding-left: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Citizen's Charter Questions Section -->
                             <div class="border rounded p-3 mb-4 shadow-sm">
                                 <h6 class="text-primary">Citizen's Charter Questions</h6>
