@@ -143,20 +143,21 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                         <h5 class="modal-title" id="csmModalLabel">Add CSM Results</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="POST" action="save_results.php">
+                    <form method="POST" action="process.php">
                         <div class="modal-body">
                             <!-- Demographic Distribution -->
                             <div class="border rounded p-3 mb-4 shadow-sm">
+                            <h6 class="text-primary">Demographic</h6>
                                 <div class="row">
                                     <!-- Gender Column -->
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Gender</label><br>
                                         <div class="form-check">
-                                            <input type="radio" class="form-check-input custom-radio" id="male" name="gender" value="male" required>
+                                            <input type="radio" class="form-check-input custom-radio" id="male" name="gender" value="Male" required>
                                             <label for="male">Male</label>
                                         </div>
                                         <div class="form-check">
-                                            <input type="radio" class="form-check-input custom-radio" id="female" name="gender" value="female">
+                                            <input type="radio" class="form-check-input custom-radio" id="female" name="gender" value="Female">
                                             <label for="female">Female</label>
                                         </div>
                                     </div>
@@ -232,6 +233,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 <h6 class="text-primary">Service Quality Dimensions</h6>
                                 <div class="mb-3">
                                     <label class="form-label">SQD1: Responsiveness</label>
+                                    <input type="hidden" name="respo" value="Responsiveness"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="responsiveness" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -255,6 +257,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD2: Reliability</label>
+                                    <input type="hidden" name="relia" value="Reliability"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="reliability" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -278,6 +281,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD3: Access and Facilities</label>
+                                    <input type="hidden" name="acce" value="Access and Facilities"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="access" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -301,6 +305,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD4: Communication</label>
+                                    <input type="hidden" name="commu" value="Communication"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="communication" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -324,6 +329,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD5: Costs</label>
+                                    <input type="hidden" name="cost" value="Costs"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="costs" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -347,6 +353,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD6: Integrity</label>
+                                    <input type="hidden" name="integ" value="Integrity"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="integrity" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -370,6 +377,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD7: Assurance</label>
+                                    <input type="hidden" name="assur" value="Assurance"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="assurance" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -393,6 +401,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD8: Outcome</label>
+                                    <input type="hidden" name="out" value="Outcome"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="outcome" value="Strongly Agree" required>
                                         <label class="form-check-label">Strongly Agree</label>
@@ -536,9 +545,9 @@ $service_data = $conn->query("SELECT * FROM service_quality");
             <tbody>
                 <?php while ($row = $cc_data->fetch_assoc()): ?>
                     <tr>
-                        <td><?= $row['question'] ?></td>
-                        <td><?= $row['responses'] ?></td>
-                        <td><?= $row['percentage'] ?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
@@ -667,14 +676,14 @@ $service_data = $conn->query("SELECT * FROM service_quality");
             <tbody>
                 <?php while ($row = $service_data->fetch_assoc()): ?>
                     <tr>
-                        <td><?= $row['dimension'] ?></td>
-                        <td><?= $row['strongly_agree'] ?></td>
-                        <td><?= $row['agree'] ?></td>
-                        <td><?= $row['neutral'] ?></td>
-                        <td><?= $row['disagree'] ?></td>
-                        <td><?= $row['strongly_disagree'] ?></td>
-                        <td><?= $row['total_responses'] ?></td>
-                        <td><?= $row['overall'] ?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>

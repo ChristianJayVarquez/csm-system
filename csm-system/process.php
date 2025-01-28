@@ -1,32 +1,98 @@
 <?php
 include 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Insert CC Awareness Data
-    $question = $_POST['question'];
-    $responses = $_POST['responses'];
-    $percentage = $_POST['percentage'];
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $stmt = $conn->prepare("INSERT INTO cc_awareness (question, responses, percentage) VALUES (?, ?, ?)");
-    $stmt->bind_param("sii", $question, $responses, $percentage);
-    $stmt->execute();
+    // Escape and sanitize form data
+    $gender = $conn->real_escape_string($_POST['gender']);
+    $age = $conn->real_escape_string($_POST['age']);
+    $cc1 = $conn->real_escape_string($_POST['cc1']);
+    $cc2 = $conn->real_escape_string($_POST['cc2']);
+    $cc3 = $conn->real_escape_string($_POST['cc3']);
 
-    // Insert Service Quality Data
-    $dimension = $_POST['dimension'];
-    $strongly_agree = $_POST['strongly_agree'];
-    $agree = $_POST['agree'];
-    $neutral = $_POST['neutral'];
-    $disagree = $_POST['disagree'];
-    $strongly_disagree = $_POST['strongly_disagree'];
-    $na = 0;  // Default for NA
-    $total_responses = $_POST['total_responses'];
-    $overall = $_POST['overall'];
+    // Escape levels (responses) for service_quality
+    $responsiveness = $conn->real_escape_string($_POST['responsiveness']);
+    $reliability = $conn->real_escape_string($_POST['reliability']);
+    $access = $conn->real_escape_string($_POST['access']);
+    $communication = $conn->real_escape_string($_POST['communication']);
+    $costs = $conn->real_escape_string($_POST['costs']);
+    $integrity = $conn->real_escape_string($_POST['integrity']);
+    $assurance = $conn->real_escape_string($_POST['assurance']);
+    $outcome = $conn->real_escape_string($_POST['outcome']);
 
-    $stmt = $conn->prepare("INSERT INTO service_quality (dimension, strongly_agree, agree, neutral, disagree, strongly_disagree, na, total_responses, overall) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("siiiiiiid", $dimension, $strongly_agree, $agree, $neutral, $disagree, $strongly_disagree, $na, $total_responses, $overall);
-    $stmt->execute();
+    // Insert data into demographics table
+    $age_group = $conn->real_escape_string(getAgeGroup($age)); // Convert age into an age group
+    $demographicSql = "INSERT INTO demographics (age_group, gender) VALUES ('$age_group', '$gender')";
+    if (!$conn->query($demographicSql)) {
+        echo "Error inserting demographic data: " . $conn->error;
+        exit();
+    }
+    $demographic_id = $conn->insert_id; // Get the last inserted ID for demographics
 
+    // Insert data into cc_awareness table
+    $questions = [
+        "CC1" => $cc1,
+        "CC2" => $cc2,
+        "CC3" => $cc3
+    ];
+
+    foreach ($questions as $question => $response) {
+        $question = $conn->real_escape_string($question);
+        $response = $conn->real_escape_string($response);
+        $ccSql = "INSERT INTO cc_awareness (question, responses, demographic_id) VALUES ('$question', '$response', '$demographic_id')";
+        if (!$conn->query($ccSql)) {
+            echo "Error inserting CC awareness data: " . $conn->error;
+            exit();
+        }
+    }
+
+    // Insert data into service_quality table (mirroring the cc_awareness process)
+    $serviceQuestions = [
+        "Responsiveness" => $responsiveness,
+        "Reliability" => $reliability,
+        "Access and Facilities" => $access,
+        "Communication" => $communication,
+        "Costs" => $costs,
+        "Integrity" => $integrity,
+        "Assurance" => $assurance,
+        "Outcome" => $outcome
+    ];
+
+    foreach ($serviceQuestions as $dimension => $level) {
+        $dimension = $conn->real_escape_string($dimension); // Escape dimension
+        $level = $conn->real_escape_string($level); // Escape level
+        $serviceSql = "INSERT INTO service_quality (dimension, level, demographic_id) VALUES ('$dimension', '$level', '$demographic_id')";
+        if (!$conn->query($serviceSql)) {
+            echo "Error inserting Service Quality data: " . $conn->error;
+            exit();
+        }
+    }
+
+    // If everything is successful, redirect to a success page or display a success message
+    echo "Data saved successfully!";
     header("Location: index.php");
-    exit;
+    exit; 
+} else {
+    echo "Invalid request method.";
+}
+
+// Function to group ages into predefined age groups
+function getAgeGroup($age) {
+    if ($age < 18) {
+        return "Under 18";
+    } elseif ($age >= 18 && $age <= 24) {
+        return "18-24";
+    } elseif ($age >= 25 && $age <= 34) {
+        return "25-34";
+    } elseif ($age >= 35 && $age <= 44) {
+        return "35-44";
+    } elseif ($age >= 45 && $age <= 54) {
+        return "45-54";
+    } elseif ($age >= 55 && $age <= 64) {
+        return "55-64";
+    } else {
+        return "65 and over";
+    }
 }
 ?>
