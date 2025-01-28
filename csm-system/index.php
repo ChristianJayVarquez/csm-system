@@ -1,33 +1,42 @@
 <?php
 include 'db.php';
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
-    $gender = $_POST['gender'] ?? '';
-    $age = $_POST['age'] ?? 0;
+// Fetch age group distribution
+$ageQuery = "SELECT age_group, COUNT(*) as total FROM demographics GROUP BY age_group";
+$ageStmt = $conn->prepare($ageQuery);
+$ageStmt->execute();
+$ageResult = $ageStmt->get_result();
+$ageResults = $ageResult->fetch_all(MYSQLI_ASSOC);
 
-    $stmt = $conn->prepare("INSERT INTO results (name, gender, age) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssi", $name, $gender, $age);
-    $stmt->execute();
-    $stmt->close();
+// Fetch gender distribution
+$genderQuery = "SELECT gender, COUNT(*) as total FROM demographics GROUP BY gender";
+$genderStmt = $conn->prepare($genderQuery);
+$genderStmt->execute();
+$genderResult = $genderStmt->get_result();
+$genderResults = $genderResult->fetch_all(MYSQLI_ASSOC);
+
+// Calculate totals for percentage calculations
+$totalQuery = "SELECT COUNT(*) as grand_total FROM demographics";
+$totalStmt = $conn->prepare($totalQuery);
+$totalStmt->execute();
+$totalResult = $totalStmt->get_result();
+$grandTotal = $totalResult->fetch_assoc()['grand_total'];
+
+// Process age data
+$ageData = [];
+foreach ($ageResults as $row) {
+    $ageGroup = $row['age_group'];
+    $total = $row['total'];
+    $ageData[$ageGroup] = $total;
 }
 
-// Fetch demographic data
-$genderCounts = $conn->query("SELECT gender, COUNT(*) as count FROM results GROUP BY gender");
-$ageGroups = $conn->query("SELECT 
-    CASE 
-        WHEN age BETWEEN 0 AND 18 THEN '0-18'
-        WHEN age BETWEEN 19 AND 35 THEN '19-35'
-        WHEN age BETWEEN 36 AND 60 THEN '36-60'
-        ELSE '60+' 
-    END as age_group, 
-    COUNT(*) as count 
-    FROM results 
-    GROUP BY age_group");
-
-// Fetch results for the table
-$results = $conn->query("SELECT * FROM results");
+// Process gender data
+$genderData = [];
+foreach ($genderResults as $row) {
+    $gender = $row['gender'];
+    $total = $row['total'];
+    $genderData[$gender] = $total;
+}
 
 // Fetch Data
 $cc_data = $conn->query("SELECT * FROM cc_awareness");
@@ -84,18 +93,42 @@ $service_data = $conn->query("SELECT * FROM service_quality");
         <!-- Demographics Section -->
         <div class="mb-4 p-4 bg-light rounded">
             <h2>Demographic Distribution</h2>
+            <!-- Age Group Distribution -->
+            <h4>Age Group Distribution</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Age Group</th>
+                        <th>Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($ageData as $ageGroup => $total): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($ageGroup); ?></td>
+                            <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <!-- Gender Distribution -->
             <h4>Gender Distribution</h4>
-            <ul>
-                <?php while ($row = $genderCounts->fetch_assoc()): ?>
-                    <li><?= ucfirst($row['gender']) ?>: <?= $row['count'] ?> people</li>
-                <?php endwhile; ?>
-            </ul>
-            <h4>Age Distribution</h4>
-            <ul>
-                <?php while ($row = $ageGroups->fetch_assoc()): ?>
-                    <li><?= $row['age_group'] ?> years: <?= $row['count'] ?> people</li>
-                <?php endwhile; ?>
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Gender</th>
+                        <th>Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($genderData as $gender => $total): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($gender); ?></td>
+                            <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
         
         <!-- Add this button to trigger the modal -->
@@ -527,8 +560,8 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Dimension 1</td>
+            <tr>
+                    <td>Responsiveness</td>
                     <td>X</td>
                     <td>X</td>
                     <td>X</td>
@@ -539,7 +572,84 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                     <td>yy.yy%</td>
                 </tr>
                 <tr>
-                    <td>Dimension 2</td>
+                    <td>Reliability</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Access and Facilities</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Communication</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Costs</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Integrity</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Assurance</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Outcome</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>X</td>
+                    <td>yy.yy%</td>
+                </tr>
+                <tr>
+                    <td>Overall</td>
                     <td>X</td>
                     <td>X</td>
                     <td>X</td>
