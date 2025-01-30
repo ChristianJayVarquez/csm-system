@@ -54,7 +54,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 
-<STyle> 
+<style> 
     .custom-radio {
         border: 2px solid black;  /* Black border around the radio button */
         border-radius: 50%;  /* Ensure it's a round border */
@@ -83,7 +83,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
         text-align: left;
     }
 
-</STyle>
+</style>
    
 </head>
 <body>
@@ -93,6 +93,7 @@ $service_data = $conn->query("SELECT * FROM service_quality");
         <!-- Demographics Section -->
         <div class="mb-4 p-4 bg-light rounded">
             <h2>Demographic Distribution</h2>
+
             <!-- Age Group Distribution -->
             <h4>Age Group Distribution</h4>
             <table>
@@ -103,14 +104,21 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($ageData as $ageGroup => $total): ?>
+                    <?php if (!empty($ageData)): ?>
+                        <?php foreach ($ageData as $ageGroup => $total): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($ageGroup); ?></td>
+                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($ageGroup); ?></td>
-                            <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                            <td colspan="2" style="text-align:center;">No responses recorded</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
+
             <!-- Gender Distribution -->
             <h4>Gender Distribution</h4>
             <table>
@@ -121,12 +129,18 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($genderData as $gender => $total): ?>
+                    <?php if (!empty($genderData)): ?>
+                        <?php foreach ($genderData as $gender => $total): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($gender); ?></td>
+                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($gender); ?></td>
-                            <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                            <td colspan="2" style="text-align:center;">No responses recorded</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
