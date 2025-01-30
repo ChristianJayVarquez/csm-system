@@ -21,9 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $assurance = $conn->real_escape_string($_POST['assurance']);
     $outcome = $conn->real_escape_string($_POST['outcome']);
 
+    // Get current timestamp as DATETIME format
+    $created_at = date('Y-m-d H:i:s');
+
     // Insert data into demographics table
     $age_group = $conn->real_escape_string(getAgeGroup($age)); // Convert age into an age group
-    $demographicSql = "INSERT INTO demographics (age_group, gender) VALUES ('$age_group', '$gender')";
+    $demographicSql = "INSERT INTO demographics (age_group, gender, created_at) VALUES ('$age_group', '$gender', '$created_at')";
     if (!$conn->query($demographicSql)) {
         echo "Error inserting demographic data: " . $conn->error;
         exit();
@@ -40,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($questions as $question => $response) {
         $question = $conn->real_escape_string($question);
         $response = $conn->real_escape_string($response);
-        $ccSql = "INSERT INTO cc_awareness (question, responses, demographic_id) VALUES ('$question', '$response', '$demographic_id')";
+        $ccSql = "INSERT INTO cc_awareness (question, responses, demographic_id, created_at) VALUES ('$question', '$response', '$demographic_id', '$created_at')";
         if (!$conn->query($ccSql)) {
             echo "Error inserting CC awareness data: " . $conn->error;
             exit();
@@ -62,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($serviceQuestions as $dimension => $level) {
         $dimension = $conn->real_escape_string($dimension); // Escape dimension
         $level = $conn->real_escape_string($level); // Escape level
-        $serviceSql = "INSERT INTO service_quality (dimension, level, demographic_id) VALUES ('$dimension', '$level', '$demographic_id')";
+        $serviceSql = "INSERT INTO service_quality (dimension, level, demographic_id, created_at) VALUES ('$dimension', '$level', '$demographic_id', '$created_at')";
         if (!$conn->query($serviceSql)) {
             echo "Error inserting Service Quality data: " . $conn->error;
             exit();

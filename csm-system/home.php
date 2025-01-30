@@ -54,38 +54,36 @@ $service_data = $conn->query("SELECT * FROM service_quality");
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <style> 
+        .custom-radio {
+            border: 2px solid black;  /* Black border around the radio button */
+            border-radius: 50%;  /* Ensure it's a round border */
+            padding: 5px;  /* Adjust padding for better visibility */
+        }
 
-<style> 
-    .custom-radio {
-        border: 2px solid black;  /* Black border around the radio button */
-        border-radius: 50%;  /* Ensure it's a round border */
-        padding: 5px;  /* Adjust padding for better visibility */
-    }
+        .custom-radio:checked {
+        
+            border-color: gray;  /* Keep border black even when checked */
+        }
 
-    .custom-radio:checked {
-       
-        border-color: gray;  /* Keep border black even when checked */
-    }
+        .custom-radio:focus {
+            outline: none;  /* Remove default focus outline */
+        }
+        
+        /* Make the first row a bit thicker */
+        .thicker-row {
+            font-weight: bold;  /* Make the text bold */
+            background-color: #f0f0f0;  /* Light gray background for distinction */
+            border-top: 3px solid black;  /* Thicker top border */
+            border-bottom: 3px solid black;  /* Thicker bottom border */
+        }
 
-    .custom-radio:focus {
-        outline: none;  /* Remove default focus outline */
-    }
-    
-    /* Make the first row a bit thicker */
-    .thicker-row {
-        font-weight: bold;  /* Make the text bold */
-        background-color: #f0f0f0;  /* Light gray background for distinction */
-        border-top: 3px solid black;  /* Thicker top border */
-        border-bottom: 3px solid black;  /* Thicker bottom border */
-    }
+        /* Align the first column (Questions) to the left */
+        .table td:first-child, .table th:first-child {
+            text-align: left;
+        }
 
-    /* Align the first column (Questions) to the left */
-    .table td:first-child, .table th:first-child {
-        text-align: left;
-    }
-
-</style>
-   
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -99,10 +97,9 @@ $service_data = $conn->query("SELECT * FROM service_quality");
         <!-- Demographics Section -->
         <div class="mb-4 p-4 bg-light rounded">
             <h2>Demographic Distribution</h2>
-
             <!-- Age Group Distribution -->
             <h4>Age Group Distribution</h4>
-            <table>
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Age Group</th>
@@ -124,10 +121,9 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                     <?php endif; ?>
                 </tbody>
             </table>
-
             <!-- Gender Distribution -->
             <h4>Gender Distribution</h4>
-            <table>
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Gender</th>
@@ -588,108 +584,108 @@ $service_data = $conn->query("SELECT * FROM service_quality");
         </table>
         
         <?php
-$query = "
-    SELECT dimension, level, COUNT(level) AS response_count 
-    FROM service_quality 
-    GROUP BY dimension, level
-";
-$result = $conn->query($query);
+            $query = "
+                SELECT dimension, level, COUNT(level) AS response_count 
+                FROM service_quality 
+                GROUP BY dimension, level
+            ";
+            $result = $conn->query($query);
 
-// Define service quality dimensions
-$dimensions = [
-    "Responsiveness", "Reliability", "Access and Facilities", "Communication",
-    "Costs", "Integrity", "Assurance", "Outcome"
-];
+            // Define service quality dimensions
+            $dimensions = [
+                "Responsiveness", "Reliability", "Access and Facilities", "Communication",
+                "Costs", "Integrity", "Assurance", "Outcome"
+            ];
 
-// Define response levels with corresponding values
-$levels = [
-    "Strongly Agree" => 5, "Agree" => 4, "Neither Agree nor Disagree" => 3, 
-    "Disagree" => 2, "Strongly Disagree" => 1, "N/A" => 0
-];
+            // Define response levels with corresponding values
+            $levels = [
+                "Strongly Agree" => 5, "Agree" => 4, "Neither Agree nor Disagree" => 3, 
+                "Disagree" => 2, "Strongly Disagree" => 1, "N/A" => 0
+            ];
 
-// Initialize arrays for storing data
-$data = [];
-$total_per_dimension = [];
-$total_per_column = array_fill_keys(array_keys($levels), 0);
-$grand_total = 0;
-$weighted_scores = [];
+            // Initialize arrays for storing data
+            $data = [];
+            $total_per_dimension = [];
+            $total_per_column = array_fill_keys(array_keys($levels), 0);
+            $grand_total = 0;
+            $weighted_scores = [];
 
-// Process data from database
-while ($row = $result->fetch_assoc()) {
-    $dimension = $row['dimension'];
-    $level = $row['level'];
-    $count = $row['response_count'];
-    
-    // Store total responses for each dimension
-    $total_per_dimension[$dimension] = ($total_per_dimension[$dimension] ?? 0) + $count;
-    
-    // Store counts by dimension and level
-    $data[$dimension][$level] = $count;
-    
-    // Add to total per column
-    $total_per_column[$level] += $count;
-    $grand_total += $count;
-    
-    // Calculate weighted score
-    $weighted_scores[$dimension] = ($weighted_scores[$dimension] ?? 0) + ($levels[$level] * $count);
-}
-?>
-<!-- Service Quality Dimensions Table -->
-<h3>Service Quality Dimensions</h3>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Service Quality Dimensions</th>
-            <?php foreach (array_keys($levels) as $level): ?>
-                <th><?php echo htmlspecialchars($level); ?></th>
-            <?php endforeach; ?>
-            <th>Total Responses</th>
-            <th>Overall (%)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($dimensions as $dimension): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($dimension); ?></td>
-                <?php $row_total = $total_per_dimension[$dimension] ?? 0; ?>
-                <?php foreach (array_keys($levels) as $level): ?>
-                    <td>
-                        <?php 
-                        $count = $data[$dimension][$level] ?? 0;
-                        echo $count > 0 ? $count : "x"; 
-                        ?>
-                    </td>
+            // Process data from database
+            while ($row = $result->fetch_assoc()) {
+                $dimension = $row['dimension'];
+                $level = $row['level'];
+                $count = $row['response_count'];
+                
+                // Store total responses for each dimension
+                $total_per_dimension[$dimension] = ($total_per_dimension[$dimension] ?? 0) + $count;
+                
+                // Store counts by dimension and level
+                $data[$dimension][$level] = $count;
+                
+                // Add to total per column
+                $total_per_column[$level] += $count;
+                $grand_total += $count;
+                
+                // Calculate weighted score
+                $weighted_scores[$dimension] = ($weighted_scores[$dimension] ?? 0) + ($levels[$level] * $count);
+            }
+        ?>
+        <!-- Service Quality Dimensions Table -->
+        <h3>Service Quality Dimensions</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Service Quality Dimensions</th>
+                    <?php foreach (array_keys($levels) as $level): ?>
+                        <th><?php echo htmlspecialchars($level); ?></th>
+                    <?php endforeach; ?>
+                    <th>Total Responses</th>
+                    <th>Overall (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($dimensions as $dimension): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($dimension); ?></td>
+                        <?php $row_total = $total_per_dimension[$dimension] ?? 0; ?>
+                        <?php foreach (array_keys($levels) as $level): ?>
+                            <td>
+                                <?php 
+                                $count = $data[$dimension][$level] ?? 0;
+                                echo $count > 0 ? $count : "x"; 
+                                ?>
+                            </td>
+                        <?php endforeach; ?>
+                        <td><?php echo $row_total > 0 ? $row_total : "x"; ?></td>
+                        <td>
+                            <?php 
+                            if ($row_total > 0) {
+                                $weighted_avg = $weighted_scores[$dimension] / $row_total;
+                                echo number_format(($weighted_avg / 5) * 100, 2) . "%";
+                            } else {
+                                echo "yy.yy%";
+                            }
+                            ?>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
-                <td><?php echo $row_total > 0 ? $row_total : "x"; ?></td>
-                <td>
-                    <?php 
-                    if ($row_total > 0) {
-                        $weighted_avg = $weighted_scores[$dimension] / $row_total;
-                        echo number_format(($weighted_avg / 5) * 100, 2) . "%";
-                    } else {
-                        echo "0.00%";
-                    }
-                    ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        
-        <!-- Overall row -->
-        <tr>
-            <td><b>Overall</b></td>
-            <?php foreach (array_keys($levels) as $level): ?>
-                <td>
-                    <?php 
-                    $column_total = $total_per_column[$level] ?? 0;
-                    echo $column_total > 0 ? $column_total : "x"; 
-                    ?>
-                </td>
-            <?php endforeach; ?>
-            <td><?php echo $grand_total > 0 ? $grand_total : "x"; ?></td>
-            <td><b>100.00%</b></td>
-        </tr>
-    </tbody>
-</table>
+                
+                <!-- Overall row -->
+                <tr>
+                    <td><b>Overall</b></td>
+                    <?php foreach (array_keys($levels) as $level): ?>
+                        <td>
+                            <?php 
+                            $column_total = $total_per_column[$level] ?? 0;
+                            echo $column_total > 0 ? $column_total : "x"; 
+                            ?>
+                        </td>
+                    <?php endforeach; ?>
+                    <td><?php echo $grand_total > 0 ? $grand_total : "x"; ?></td>
+                    <td><b>100.00%</b></td>
+                </tr>
+            </tbody>
+        </table>
     </div>  
 </body>
 </html>
