@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // If everything is successful, redirect to a success page or display a success message
     echo "Data saved successfully!";
-    header("Location: index.php");
+    header("Location: home.php");
     exit; 
 } else {
     echo "Invalid request method.";

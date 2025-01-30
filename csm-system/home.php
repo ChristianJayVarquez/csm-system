@@ -41,6 +41,7 @@ foreach ($genderResults as $row) {
 // Fetch Data
 $cc_data = $conn->query("SELECT * FROM cc_awareness");
 $service_data = $conn->query("SELECT * FROM service_quality");
+
 ?>
 
 <!DOCTYPE html>
@@ -89,6 +90,11 @@ $service_data = $conn->query("SELECT * FROM service_quality");
 <body>
     <div class="container mt-4">
         <h1>CSM Consolidated Report</h1>
+
+        <!-- Add this button to trigger the modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csmModal" style="width: auto; padding: 5px 10px; font-size: 14px;">
+            Add CSM Results
+        </button>
 
         <!-- Demographics Section -->
         <div class="mb-4 p-4 bg-light rounded">
@@ -144,11 +150,6 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                 </tbody>
             </table>
         </div>
-        
-        <!-- Add this button to trigger the modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csmModal" style="width: auto; padding: 5px 10px; font-size: 14px;">
-            Add CSM Results
-        </button>
 
         <div class="modal fade" id="csmModal" tabindex="-1" aria-labelledby="csmModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -268,6 +269,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                         <input class="form-check-input custom-radio" type="radio" name="responsiveness" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="responsiveness" value="N/A">
+                                        <label class="form-check-label">N/A</label>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD2: Reliability</label>
@@ -291,6 +296,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="reliability" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="reliability" value="N/A">
+                                        <label class="form-check-label">N/A</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -316,6 +325,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                         <input class="form-check-input custom-radio" type="radio" name="access" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="access" value="N/A">
+                                        <label class="form-check-label">N/A</label>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD4: Communication</label>
@@ -339,6 +352,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="communication" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="communication" value="N/A">
+                                        <label class="form-check-label">N/A</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -364,6 +381,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                         <input class="form-check-input custom-radio" type="radio" name="costs" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="costs" value="N/A">
+                                        <label class="form-check-label">N/A</label>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD6: Integrity</label>
@@ -387,6 +408,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="integrity" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="integrity" value="N/A">
+                                        <label class="form-check-label">N/A</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -412,6 +437,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                         <input class="form-check-input custom-radio" type="radio" name="assurance" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="assurance" value="N/A">
+                                        <label class="form-check-label">N/A</label>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD8: Outcome</label>
@@ -436,6 +465,10 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                                         <input class="form-check-input custom-radio" type="radio" name="outcome" value="Strongly Disagree">
                                         <label class="form-check-label">Strongly Disagree</label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="outcome" value="N/A">
+                                        <label class="form-check-label">N/A</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -449,259 +482,214 @@ $service_data = $conn->query("SELECT * FROM service_quality");
             </div>
         </div>
 
+        <?php
+            // Fetch responses grouped by question and count occurrences
+            $query = "
+            SELECT question, responses, COUNT(responses) AS response_count 
+            FROM cc_awareness 
+            GROUP BY question, responses
+            ";
+            $result = $conn->query($query);
+
+            // Organize data in an associative array
+            $data = [];
+            $total_responses = [];
+
+            while ($row = $result->fetch_assoc()) {
+            $question = trim($row['question']);  // CC1, CC2, CC3
+            $response = trim(html_entity_decode($row['responses'], ENT_QUOTES)); // Decode special characters
+            $count = $row['response_count'];
+
+            // Store total responses per question for percentage calculation
+            if (!isset($total_responses[$question])) {
+                $total_responses[$question] = 0;
+            }
+            $total_responses[$question] += $count;
+
+            // Store response counts
+            $data[$question][$response] = $count;
+            }
+
+            // Define questions and possible responses (matching exactly with DB saved values)
+            $questions = [
+            "CC1" => [
+                "I know what a CC is and I saw this office\'s CC",
+                "I know what a CC is but I did not see this office\'s CC",
+                "I learned of the CC only when I saw this office\'s CC",
+                "I do not know what a CC is and I did not see this office\'s CC"
+            ],
+            "CC2" => [
+                "Easy to see",
+                "Somewhat easy to see",
+                "Difficult to see",
+                "Not visible at all"
+            ],
+            "CC3" => [
+                "Helped very much",
+                "Somewhat helped",
+                "Did not help"
+            ]
+            ];
+        ?>
+        <!-- Citizen's Charter Questions Table -->
         <h3>Citizen's Charter Questions</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                <th style="text-align:center;">Citizen's Charter Answers</th>
+                    <th style="text-align:center;">Citizen's Charter Answers</th>
                     <th>Responses</th>
                     <th>Percentage (%)</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Row 1 (Make it thicker) -->
-                <tr class="thicker-row">
-                    <td><b>CC1.</b> Which of the following describes your awareness of the CC?</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <!-- Row 2 -->
-                <tr>
-                    <td><b>1.</b> I know what a CC is and I saw this office's CC.</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 3 -->
-                <tr>
-                    <td><b>2.</b> I know what a CC is but I did not see this office's CC.</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 4 -->
-                <tr>
-                    <td><b>3.</b> I learned of the CC only when I saw this office's CC.</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 5 -->
-                <tr>
-                    <td><b>4.</b> I do not know what a CC is and I did not see this office's CC.</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <!-- CC2 -->
-                <tr class="thicker-row">
-                    <td><b>CC2.</b> If aware of CC, would you say that the CC of this was...?</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td><b>1.</b> Easy to see</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 3 -->
-                <tr>
-                    <td><b>2.</b> Somewhat easy to see</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 4 -->
-                <tr>
-                    <td><b>3.</b> Difficult to see</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 5 -->
-                <tr>
-                    <td><b>4.</b> Not visible at all</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                 <!-- CC3 -->
-                 <tr class="thicker-row">
-                    <td><b>CC3.</b> If aware of CC, how much did the CC help you in your transaction?</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td><b>1.</b> Helped very much</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 3 -->
-                <tr>
-                    <td><b>2.</b> Somewhat helped</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Row 4 -->
-                <tr>
-                    <td><b>3.</b> Did not help</td>
-                    <td>x</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Add more rows as needed -->
-            </tbody>
-        </table>
+                <?php foreach ($questions as $key => $responses): ?>
+                    <!-- Section Heading -->
+                    <tr class="thicker-row">
+                        <td><b><?php echo htmlspecialchars($key); ?></b></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    
+                    <?php foreach ($responses as $text): ?>
+                        <?php 
+                            // Remove backslashes only for display
+                            $displayText = stripslashes($text);
+                            $normalizedText = trim(html_entity_decode($text, ENT_QUOTES)); // Ensure exact match
+                        ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($displayText); ?></td>
+                            <td>
+                                <?php 
+                                    $count = $data[$key][$normalizedText] ?? 0;
+                                    echo $count > 0 ? $count : "x";
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    if (isset($data[$key][$normalizedText]) && $total_responses[$key] > 0) {
+                                        $percentage = ($data[$key][$normalizedText] / $total_responses[$key]) * 100;
+                                        echo number_format($percentage, 2) . "%";
+                                    } else {
+                                        echo "yy.yy%";
+                                    }
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
 
-
-            <tbody>
-                <?php while ($row = $cc_data->fetch_assoc()): ?>
+                    <!-- Empty row for spacing -->
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
+        
+        <?php
+$query = "
+    SELECT dimension, level, COUNT(level) AS response_count 
+    FROM service_quality 
+    GROUP BY dimension, level
+";
+$result = $conn->query($query);
 
-        <h3>Service Quality Dimensions</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Service Quality Dimensions</th>
-                    <th>Strongly Agree</th>
-                    <th>Agree</th>
-                    <th>Neither Agree nor Disagree</th>
-                    <th>Disagree</th>
-                    <th>Strongly Disagree</th>
-                    <th>N/A</th>
-                    <th>Total Responses</th>
-                    <th>Overall (%)</th>
-                </tr>
-            </thead>
-            <tbody>
+// Define service quality dimensions
+$dimensions = [
+    "Responsiveness", "Reliability", "Access and Facilities", "Communication",
+    "Costs", "Integrity", "Assurance", "Outcome"
+];
+
+// Define response levels with corresponding values
+$levels = [
+    "Strongly Agree" => 5, "Agree" => 4, "Neither Agree nor Disagree" => 3, 
+    "Disagree" => 2, "Strongly Disagree" => 1, "N/A" => 0
+];
+
+// Initialize arrays for storing data
+$data = [];
+$total_per_dimension = [];
+$total_per_column = array_fill_keys(array_keys($levels), 0);
+$grand_total = 0;
+$weighted_scores = [];
+
+// Process data from database
+while ($row = $result->fetch_assoc()) {
+    $dimension = $row['dimension'];
+    $level = $row['level'];
+    $count = $row['response_count'];
+    
+    // Store total responses for each dimension
+    $total_per_dimension[$dimension] = ($total_per_dimension[$dimension] ?? 0) + $count;
+    
+    // Store counts by dimension and level
+    $data[$dimension][$level] = $count;
+    
+    // Add to total per column
+    $total_per_column[$level] += $count;
+    $grand_total += $count;
+    
+    // Calculate weighted score
+    $weighted_scores[$dimension] = ($weighted_scores[$dimension] ?? 0) + ($levels[$level] * $count);
+}
+?>
+<!-- Service Quality Dimensions Table -->
+<h3>Service Quality Dimensions</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Service Quality Dimensions</th>
+            <?php foreach (array_keys($levels) as $level): ?>
+                <th><?php echo htmlspecialchars($level); ?></th>
+            <?php endforeach; ?>
+            <th>Total Responses</th>
+            <th>Overall (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($dimensions as $dimension): ?>
             <tr>
-                    <td>Responsiveness</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Reliability</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Access and Facilities</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Communication</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Costs</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Integrity</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Assurance</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Outcome</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <tr>
-                    <td>Overall</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>X</td>
-                    <td>yy.yy%</td>
-                </tr>
-                <!-- Add more rows as needed -->
-            </tbody>
-        </table>
-
-            </tbody>
-            <tbody>
-                <?php while ($row = $service_data->fetch_assoc()): ?>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    </div>
+                <td><?php echo htmlspecialchars($dimension); ?></td>
+                <?php $row_total = $total_per_dimension[$dimension] ?? 0; ?>
+                <?php foreach (array_keys($levels) as $level): ?>
+                    <td>
+                        <?php 
+                        $count = $data[$dimension][$level] ?? 0;
+                        echo $count > 0 ? $count : "x"; 
+                        ?>
+                    </td>
+                <?php endforeach; ?>
+                <td><?php echo $row_total > 0 ? $row_total : "x"; ?></td>
+                <td>
+                    <?php 
+                    if ($row_total > 0) {
+                        $weighted_avg = $weighted_scores[$dimension] / $row_total;
+                        echo number_format(($weighted_avg / 5) * 100, 2) . "%";
+                    } else {
+                        echo "0.00%";
+                    }
+                    ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        
+        <!-- Overall row -->
+        <tr>
+            <td><b>Overall</b></td>
+            <?php foreach (array_keys($levels) as $level): ?>
+                <td>
+                    <?php 
+                    $column_total = $total_per_column[$level] ?? 0;
+                    echo $column_total > 0 ? $column_total : "x"; 
+                    ?>
+                </td>
+            <?php endforeach; ?>
+            <td><?php echo $grand_total > 0 ? $grand_total : "x"; ?></td>
+            <td><b>100.00%</b></td>
+        </tr>
+    </tbody>
+</table>
+    </div>  
 </body>
 </html>
