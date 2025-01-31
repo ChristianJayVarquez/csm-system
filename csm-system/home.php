@@ -1,47 +1,5 @@
 <?php
 include 'db.php';
-
-// Fetch age group distribution
-$ageQuery = "SELECT age_group, COUNT(*) as total FROM demographics GROUP BY age_group";
-$ageStmt = $conn->prepare($ageQuery);
-$ageStmt->execute();
-$ageResult = $ageStmt->get_result();
-$ageResults = $ageResult->fetch_all(MYSQLI_ASSOC);
-
-// Fetch gender distribution
-$genderQuery = "SELECT gender, COUNT(*) as total FROM demographics GROUP BY gender";
-$genderStmt = $conn->prepare($genderQuery);
-$genderStmt->execute();
-$genderResult = $genderStmt->get_result();
-$genderResults = $genderResult->fetch_all(MYSQLI_ASSOC);
-
-// Calculate totals for percentage calculations
-$totalQuery = "SELECT COUNT(*) as grand_total FROM demographics";
-$totalStmt = $conn->prepare($totalQuery);
-$totalStmt->execute();
-$totalResult = $totalStmt->get_result();
-$grandTotal = $totalResult->fetch_assoc()['grand_total'];
-
-// Process age data
-$ageData = [];
-foreach ($ageResults as $row) {
-    $ageGroup = $row['age_group'];
-    $total = $row['total'];
-    $ageData[$ageGroup] = $total;
-}
-
-// Process gender data
-$genderData = [];
-foreach ($genderResults as $row) {
-    $gender = $row['gender'];
-    $total = $row['total'];
-    $genderData[$gender] = $total;
-}
-
-// Fetch Data
-$cc_data = $conn->query("SELECT * FROM cc_awareness");
-$service_data = $conn->query("SELECT * FROM service_quality");
-
 ?>
 
 <!DOCTYPE html>
@@ -93,59 +51,6 @@ $service_data = $conn->query("SELECT * FROM service_quality");
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#csmModal" style="width: auto; padding: 5px 10px; font-size: 14px;">
             Add CSM Results
         </button>
-
-        <!-- Demographics Section -->
-        <div class="mb-4 p-4 bg-light rounded">
-            <h2>Demographic Distribution</h2>
-            <!-- Age Group Distribution -->
-            <h4>Age Group Distribution</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Age Group</th>
-                        <th>Percentage (%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($ageData)): ?>
-                        <?php foreach ($ageData as $ageGroup => $total): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($ageGroup); ?></td>
-                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="2" style="text-align:center;">No responses recorded</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-            <!-- Gender Distribution -->
-            <h4>Gender Distribution</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Gender</th>
-                        <th>Percentage (%)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($genderData)): ?>
-                        <?php foreach ($genderData as $gender => $total): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($gender); ?></td>
-                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="2" style="text-align:center;">No responses recorded</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
 
         <div class="modal fade" id="csmModal" tabindex="-1" aria-labelledby="csmModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -476,6 +381,97 @@ $service_data = $conn->query("SELECT * FROM service_quality");
                     </form>
                 </div>
             </div>
+        </div>
+
+        <?php
+            // Fetch age group distribution
+            $ageQuery = "SELECT age_group, COUNT(*) as total FROM demographics GROUP BY age_group";
+            $ageStmt = $conn->prepare($ageQuery);
+            $ageStmt->execute();
+            $ageResult = $ageStmt->get_result();
+            $ageResults = $ageResult->fetch_all(MYSQLI_ASSOC);
+
+            // Fetch gender distribution
+            $genderQuery = "SELECT gender, COUNT(*) as total FROM demographics GROUP BY gender";
+            $genderStmt = $conn->prepare($genderQuery);
+            $genderStmt->execute();
+            $genderResult = $genderStmt->get_result();
+            $genderResults = $genderResult->fetch_all(MYSQLI_ASSOC);
+
+            // Calculate totals for percentage calculations
+            $totalQuery = "SELECT COUNT(*) as grand_total FROM demographics";
+            $totalStmt = $conn->prepare($totalQuery);
+            $totalStmt->execute();
+            $totalResult = $totalStmt->get_result();
+            $grandTotal = $totalResult->fetch_assoc()['grand_total'];
+
+            // Process age data
+            $ageData = [];
+            foreach ($ageResults as $row) {
+                $ageGroup = $row['age_group'];
+                $total = $row['total'];
+                $ageData[$ageGroup] = $total;
+            }
+
+            // Process gender data
+            $genderData = [];
+            foreach ($genderResults as $row) {
+                $gender = $row['gender'];
+                $total = $row['total'];
+                $genderData[$gender] = $total;
+            }
+        ?>
+        <!-- Demographics Section -->
+        <div class="mb-4 p-4 bg-light rounded">
+            <h2>Demographic Distribution</h2>
+            <!-- Age Group Distribution -->
+            <h4>Age Group Distribution</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Age Group</th>
+                        <th>Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($ageData)): ?>
+                        <?php foreach ($ageData as $ageGroup => $total): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($ageGroup); ?></td>
+                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="2" style="text-align:center;">No responses recorded</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            <!-- Gender Distribution -->
+            <h4>Gender Distribution</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Gender</th>
+                        <th>Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($genderData)): ?>
+                        <?php foreach ($genderData as $gender => $total): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($gender); ?></td>
+                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="2" style="text-align:center;">No responses recorded</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
 
         <?php
