@@ -5,6 +5,7 @@ include 'db.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Escape and sanitize form data
+    $survey_date = $conn->real_escape_string($_POST['survey_date']);
     $gender = $conn->real_escape_string($_POST['gender']);
     $age = $conn->real_escape_string($_POST['age']);
     $cc1 = $conn->real_escape_string($_POST['cc1']);
@@ -23,7 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insert data into demographics table
     $age_group = $conn->real_escape_string(getAgeGroup($age)); // Convert age into an age group
-    $demographicSql = "INSERT INTO demographics (age_group, gender) VALUES ('$age_group', '$gender')";
+    $demographicSql = "INSERT INTO demographics (age_group, gender, survey_date) VALUES ('$age_group', '$gender', '$survey_date')";
+    
     if (!$conn->query($demographicSql)) {
         echo "Error inserting demographic data: " . $conn->error;
         exit();

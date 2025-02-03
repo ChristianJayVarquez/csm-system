@@ -43,6 +43,31 @@ include 'db.php';
 
     </style>
 </head>
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #4B0082, #6A5ACD); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <div class="container-fluid">
+        <!-- System Name -->
+        <a class="navbar-brand text-white fw-bold" href="#">CSM System</a>
+
+        <!-- Toggle button for mobile view -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar items -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="btn btn-outline-light btn-sm" href="logout.php">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Include Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <body>
     <div class="container mt-4">
         <h1>CSM Consolidated Report</h1>
@@ -82,6 +107,11 @@ include 'db.php';
                                     <div class="col-md-6 mb-3">
                                         <label for="age" class="form-label">Age</label>
                                         <input type="number" class="form-control" id="age" name="age" required style="width: 60px; height: 30px; padding-left: 5px;">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="survey_date" class="form-label">Date of Survey</label>
+                                        <input type="date" class="form-control" id="survey_date" name="survey_date" required>
                                     </div>
                                 </div>
                             </div>
@@ -382,24 +412,69 @@ include 'db.php';
                 </div>
             </div>
         </div>
+        
+        <form method="GET" class="row g-2 mt-3">
+            <div class="col-md-6">
+                <label for="monthSelect" class="form-label">Select Month:</label>
+                <select id="monthSelect" name="selected_month" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    <?php
+                        for ($m = 1; $m <= 12; $m++) {
+                            $monthValue = str_pad($m, 2, '0', STR_PAD_LEFT);
+                            $selected = (isset($_GET['selected_month']) && $_GET['selected_month'] == $monthValue) ? "selected" : "";
+                            echo "<option value='$monthValue' $selected>" . date("F", mktime(0, 0, 0, $m, 1)) . "</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label for="yearSelect" class="form-label">Select Year:</label>
+                <select id="yearSelect" name="selected_year" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    <?php
+                        $currentYear = date("Y");
+                        for ($y = $currentYear; $y >= ($currentYear - 10); $y--) {
+                            $selected = (isset($_GET['selected_year']) && $_GET['selected_year'] == $y) ? "selected" : "";
+                            echo "<option value='$y' $selected>$y</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+        </form>
 
         <?php
+            $selected_month = isset($_GET['selected_month']) ? $_GET['selected_month'] : '';
+            $selected_year = isset($_GET['selected_year']) ? $_GET['selected_year'] : '';
+
+            // Build WHERE clause based on selected filters
+            $whereClauses = [];
+            if (!empty($selected_month)) {
+                $whereClauses[] = "MONTH(survey_date) = '$selected_month'";
+            }
+            if (!empty($selected_year)) {
+                $whereClauses[] = "YEAR(survey_date) = '$selected_year'";
+            }
+
+            // Combine WHERE conditions
+            $whereClause = !empty($whereClauses) ? "WHERE " . implode(" AND ", $whereClauses) : "";
+
             // Fetch age group distribution
-            $ageQuery = "SELECT age_group, COUNT(*) as total FROM demographics GROUP BY age_group";
+            $ageQuery = "SELECT age_group, COUNT(*) as total FROM demographics $whereClause GROUP BY age_group";
             $ageStmt = $conn->prepare($ageQuery);
             $ageStmt->execute();
             $ageResult = $ageStmt->get_result();
             $ageResults = $ageResult->fetch_all(MYSQLI_ASSOC);
 
             // Fetch gender distribution
-            $genderQuery = "SELECT gender, COUNT(*) as total FROM demographics GROUP BY gender";
+            $genderQuery = "SELECT gender, COUNT(*) as total FROM demographics $whereClause GROUP BY gender";
             $genderStmt = $conn->prepare($genderQuery);
             $genderStmt->execute();
             $genderResult = $genderStmt->get_result();
             $genderResults = $genderResult->fetch_all(MYSQLI_ASSOC);
 
-            // Calculate totals for percentage calculations
-            $totalQuery = "SELECT COUNT(*) as grand_total FROM demographics";
+            // Calculate total responses for the selected period
+            $totalQuery = "SELECT COUNT(*) as grand_total FROM demographics $whereClause";
             $totalStmt = $conn->prepare($totalQuery);
             $totalStmt->execute();
             $totalResult = $totalStmt->get_result();
@@ -414,7 +489,9 @@ include 'db.php';
             }
 
             // Process gender data
-            $genderData = [];
+            $defaultGenders = ['Male' => 0, 'Female' => 0]; // Default genders with zero counts
+            $genderData = $defaultGenders; // Initialize genderData with default values
+
             foreach ($genderResults as $row) {
                 $gender = $row['gender'];
                 $total = $row['total'];
@@ -424,6 +501,7 @@ include 'db.php';
         <!-- Demographics Section -->
         <div class="mb-4 p-4 bg-light rounded">
             <h2>Demographic Distribution</h2>
+
             <!-- Age Group Distribution -->
             <h4>Age Group Distribution</h4>
             <table class="table table-bordered">
@@ -448,6 +526,7 @@ include 'db.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+
             <!-- Gender Distribution -->
             <h4>Gender Distribution</h4>
             <table class="table table-bordered">
@@ -458,30 +537,25 @@ include 'db.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($genderData)): ?>
-                        <?php foreach ($genderData as $gender => $total): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($gender); ?></td>
-                                <td><?php echo number_format(($total / $grandTotal) * 100, 2); ?>%</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                    <?php foreach ($genderData as $gender => $total): ?>
                         <tr>
-                            <td colspan="2" style="text-align:center;">No responses recorded</td>
+                            <td><?php echo htmlspecialchars($gender); ?></td>
+                            <td><?php echo number_format(($grandTotal > 0 ? ($total / $grandTotal) * 100 : 0), 2); ?>%</td>
                         </tr>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
 
         <?php
-            // Fetch responses grouped by question and count occurrences
             $query = "
-            SELECT question, responses, COUNT(responses) AS response_count 
-            FROM cc_awareness 
-            GROUP BY question, responses
+                SELECT question, responses, COUNT(responses) AS response_count 
+                FROM cc_awareness 
+                JOIN demographics ON cc_awareness.demographic_id = demographics.id 
+                $whereClause
+                GROUP BY question, responses
             ";
-            $result = $conn->query($query);
+            $result = $conn->query($query);        
 
             // Organize data in an associative array
             $data = [];
@@ -583,9 +657,11 @@ include 'db.php';
             $query = "
                 SELECT dimension, level, COUNT(level) AS response_count 
                 FROM service_quality 
+                JOIN demographics ON service_quality.demographic_id = demographics.id 
+                $whereClause
                 GROUP BY dimension, level
             ";
-            $result = $conn->query($query);
+            $result = $conn->query($query);        
 
             // Define service quality dimensions
             $dimensions = [
