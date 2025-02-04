@@ -1,13 +1,14 @@
 <?php
-include 'db.php';
+session_start(); // Start the session
+include 'db.php'; // Include database connection
 
-session_start();
-
+// Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: http://csm-system.free.nf/");
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
