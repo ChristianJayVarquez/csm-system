@@ -23,7 +23,7 @@
         .clearfix:after{clear:both;display:block}
         a{color:inherit;text-decoration:none}
 
-        .logo-container {
+        .logo {
             position: absolute;
             top: 20px; /* Adjust as needed */
             right: 20px; /* Adjust as needed */
@@ -33,12 +33,21 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-        }
-
-        .logo-container img {
             max-width: 100%;
             height: auto;
             border-radius: 50%;
+        }
+
+        .deped-logo {
+            position: absolute;
+            top: 20px; /* Adjust as needed */
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            display: block;
+            margin: 5px auto 20px auto;
+            max-width: 40%;
+            height: auto;
         }
 
         .login-wrap {
@@ -221,8 +230,10 @@
     <div class="login-wrap">
         <div class="login-html">
             <div class="logo-container">
-                <img src="logo.png" alt="CSM System Logo">
-            </div>
+                <img src="deped.png" alt="CSM System Logo" class="deped-logo">
+                <img src="logo.png" alt="CSM System Logo" class="logo">
+            </div><br/>
+            <br/><br/><center><h4 style="color: #fff;">CSM SYSTEM</h4></center><br/>
             <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
             <label for="tab-1" class="tab">Sign In</label>
             <input id="tab-2" type="radio" name="tab" class="sign-up">
@@ -239,17 +250,14 @@
                             <input id="login-pass" name="password" type="password" class="input" data-type="password" required>
                         </div>
                         <div class="group">
-                            <input id="check" type="checkbox" class="check" checked>
-                            <label for="check"><span class="icon"></span> Keep me Signed in</label>
-                        </div>
-                        <div class="group">
                             <input type="submit" class="button" value="Sign In">
                         </div>
+                        <div class="foot-lnk">
+                            <label for="tab-2" style="color: #ffff;">Don't have an account?</label>
+                            <div class="hr"></div>
+                            <a href="#forgot" style="color: #ffff;">Welcome to Login Page of the CSM System</a>
+                        </div>
                     </form>
-                    <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <a href="#forgot" style="color: #ffff;">Welcome to Login Page of the CSM System</a>
-                    </div>
                 </div>
                 <div class="sign-up-htm">
                     <form action="register.php" method="POST">
@@ -272,11 +280,10 @@
                         <div class="group">
                             <input type="submit" class="button" value="Sign Up">
                         </div>
+                        <div class="foot-lnk">
+                            <label for="tab-1"  style="color: #ffff;">Already Member?</label>
+                        </div>
                     </form>
-                    <div class="hr"></div>
-                    <div class="foot-lnk">
-                        <label for="tab-1">Already Member?</label>
-                    </div>
                 </div>
             </div>
         </div>
