@@ -1,5 +1,12 @@
 <?php
 include 'db.php';
+
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -190,6 +197,34 @@ include 'db.php';
                             <!-- Service Quality Dimensions Section -->
                             <div class="border rounded p-3 shadow-sm">
                                 <h6 class="text-primary">Service Quality Dimensions</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">SQD0: Responsiveness</label>
+                                    <input type="hidden" name="sqd0" value="SQD0"> 
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="sqd0" value="Strongly Agree" required>
+                                        <label class="form-check-label">Strongly Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="sqd0" value="Agree">
+                                        <label class="form-check-label">Agree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="sqd0" value="Neither Agree nor Disagree">
+                                        <label class="form-check-label">Neither Agree nor Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="sqd0" value="Disagree">
+                                        <label class="form-check-label">Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="sqd0" value="Strongly Disagree">
+                                        <label class="form-check-label">Strongly Disagree</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input custom-radio" type="radio" name="sqd0" value="N/A">
+                                        <label class="form-check-label">N/A</label>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">SQD1: Responsiveness</label>
                                     <input type="hidden" name="respo" value="Responsiveness"> 
@@ -674,6 +709,120 @@ include 'db.php';
                 $whereClause
                 GROUP BY dimension, level
             ";
+            $result = $conn->query($query);
+
+            // Define service quality dimensions
+            $dimensions = [
+                "Responsiveness", "Reliability", "Access and Facilities", "Communication",
+                "Costs", "Integrity", "Assurance", "Outcome"
+            ];
+
+            // Define response levels (EXCLUDING "N/A")
+            $levels = [
+                "Strongly Disagree" => 1, 
+                "Disagree" => 2, 
+                "Neither Agree nor Disagree" => 3, 
+                "Agree" => 4, 
+                "Strongly Agree" => 5
+            ];
+
+            // Initialize arrays for storing data
+            $data = [];
+            $total_per_dimension = [];
+            $total_per_column = array_fill_keys(array_keys($levels), 0);
+            $grand_total = 0;
+            $weighted_scores = [];
+
+            // Process data from database
+            while ($row = $result->fetch_assoc()) {
+                $dimension = $row['dimension'];
+                $level = $row['level'];
+                $count = $row['response_count'];
+
+                // Skip undefined levels (i.e., "N/A" is ignored)
+                if (!isset($levels[$level])) {
+                    continue;
+                }
+
+                // Store total responses for each dimension
+                $total_per_dimension[$dimension] = ($total_per_dimension[$dimension] ?? 0) + $count;
+                
+                // Store counts by dimension and level
+                $data[$dimension][$level] = $count;
+                
+                // Add to total per column
+                $total_per_column[$level] += $count;
+                $grand_total += $count;
+                
+                // Calculate weighted score
+                $weighted_scores[$dimension] = ($weighted_scores[$dimension] ?? 0) + ($levels[$level] * $count);
+            }
+        ?>
+        <!-- Service Quality Dimensions Table -->
+        <h3>Service Quality Dimensions</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Service Quality Dimensions</th>
+                    <?php foreach (array_keys($levels) as $level): ?>
+                        <th><?php echo htmlspecialchars($level); ?></th>
+                    <?php endforeach; ?>
+                    <th>Responses</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($dimensions as $dimension): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($dimension); ?></td>
+                        <?php $row_total = $total_per_dimension[$dimension] ?? 0; ?>
+                        <?php foreach (array_keys($levels) as $level): ?>
+                            <td>
+                                <?php 
+                                $count = $data[$dimension][$level] ?? 0;
+                                echo $count > 0 ? $count : "0"; 
+                                ?>
+                            </td>
+                        <?php endforeach; ?>
+                        <td><?php echo $row_total > 0 ? $row_total : "0"; ?></td>
+                        <td>
+                            <?php 
+                            if ($row_total > 0) {
+                                $weighted_avg = $weighted_scores[$dimension] / $row_total;
+                                echo number_format($weighted_avg, 2);
+                            } else {
+                                echo "0.00";
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                
+                <!-- Overall row -->
+                <tr>
+                    <td><b>Overall</b></td>
+                    <?php foreach (array_keys($levels) as $level): ?>
+                        <td>
+                            <?php 
+                            $column_total = $total_per_column[$level] ?? 0;
+                            echo $column_total > 0 ? $column_total : "0"; 
+                            ?>
+                        </td>
+                    <?php endforeach; ?>
+                    <td><?php echo $grand_total > 0 ? $grand_total : "0"; ?></td>
+                    <td><b><?php echo $grand_total > 0 ? number_format(array_sum($weighted_scores) / $grand_total, 2) : "0.00"; ?></b></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <?php
+            $query = "
+                SELECT dimension, level, COUNT(level) AS response_count 
+                FROM service_quality 
+                JOIN demographics ON service_quality.demographic_id = demographics.id 
+                $whereClause
+                GROUP BY dimension, level
+            ";
             $result = $conn->query($query);        
 
             // Define service quality dimensions
@@ -715,8 +864,9 @@ include 'db.php';
                 $weighted_scores[$dimension] = ($weighted_scores[$dimension] ?? 0) + ($levels[$level] * $count);
             }
         ?>
-        <!-- Service Quality Dimensions Table -->
-        <h3>Service Quality Dimensions</h3>
+
+        <!-- Service Quality Dimensions Summary Table -->
+        <h3>Service Quality Dimensions (SQD) SUMMARY</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -729,7 +879,12 @@ include 'db.php';
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($dimensions as $dimension): ?>
+                <?php 
+                $overall_percentage_total = 0;
+                $dimension_count = 0;
+                
+                foreach ($dimensions as $dimension): 
+                ?>
                     <tr>
                         <td><?php echo htmlspecialchars($dimension); ?></td>
                         <?php $row_total = $total_per_dimension[$dimension] ?? 0; ?>
@@ -745,8 +900,23 @@ include 'db.php';
                         <td>
                             <?php 
                             if ($row_total > 0) {
-                                $weighted_avg = $weighted_scores[$dimension] / $row_total;
-                                echo number_format(($weighted_avg / 5) * 100, 2) . "%";
+                                // Calculate Strongly Agree + Agree
+                                $strongly_agree = $data[$dimension]['Strongly Agree'] ?? 0;
+                                $agree = $data[$dimension]['Agree'] ?? 0;
+                                $na_count = $data[$dimension]['N/A'] ?? 0;
+
+                                // Apply formula
+                                $valid_responses = $row_total - $na_count;
+                                if ($valid_responses > 0) {
+                                    $dimension_percentage = (($strongly_agree + $agree) / $valid_responses) * 100;
+                                    echo number_format($dimension_percentage, 2) . "%";
+
+                                    // Accumulate for overall average
+                                    $overall_percentage_total += $dimension_percentage;
+                                    $dimension_count++;
+                                } else {
+                                    echo "yy.yy%";
+                                }
                             } else {
                                 echo "yy.yy%";
                             }
@@ -767,10 +937,21 @@ include 'db.php';
                         </td>
                     <?php endforeach; ?>
                     <td><?php echo $grand_total > 0 ? $grand_total : "x"; ?></td>
-                    <td><b>100.00%</b></td>
+                    <td>
+                        <b>
+                            <?php 
+                            if ($dimension_count > 0) {
+                                $overall_percentage = $overall_percentage_total / $dimension_count;
+                                echo number_format($overall_percentage, 2) . "%";
+                            } else {
+                                echo "yy.yy%";
+                            }
+                            ?>
+                        </b>
+                    </td>
                 </tr>
             </tbody>
-        </table>
+        </table>    
     </div>  
 </body>
 </html>

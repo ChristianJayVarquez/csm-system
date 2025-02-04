@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cc3 = $conn->real_escape_string($_POST['cc3']);
 
     // Escape levels (responses) for service_quality
+    $sqd0 = $conn->real_escape_string($_POST['sqd0']);
     $responsiveness = $conn->real_escape_string($_POST['responsiveness']);
     $reliability = $conn->real_escape_string($_POST['reliability']);
     $access = $conn->real_escape_string($_POST['access']);
@@ -51,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insert data into service_quality table (mirroring the cc_awareness process)
     $serviceQuestions = [
+        "SQD0" => $sqd0,
         "Responsiveness" => $responsiveness,
         "Reliability" => $reliability,
         "Access and Facilities" => $access,
