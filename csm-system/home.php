@@ -223,7 +223,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="sqd0" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -251,7 +251,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="responsiveness" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -279,7 +279,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="reliability" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -307,11 +307,11 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="access" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD4: I easily found information about my transaction from the office or its website</label>
+                                    <label class="form-label">SQD4: I easily found information about my transaction from the office or its website.</label>
                                     <input type="hidden" name="commu" value="Communication"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="communication" value="Strongly Agree" required>
@@ -335,7 +335,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="communication" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -363,7 +363,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="costs" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -391,7 +391,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="integrity" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -419,7 +419,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="assurance" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -447,7 +447,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="outcome" value="N/A">
-                                        <label class="form-check-label">N/A</label>
+                                        <label class="form-check-label">N/A (Not Applicable)</label>
                                     </div>
                                 </div>
                             </div>
@@ -816,7 +816,7 @@ if (!isset($_SESSION['user_id'])) {
             </tbody>
         </table>
         
-        <?php
+        <?php 
             $query = "
                 SELECT dimension, level, COUNT(level) AS response_count 
                 FROM service_quality 
@@ -826,10 +826,17 @@ if (!isset($_SESSION['user_id'])) {
             ";
             $result = $conn->query($query);        
 
-            // Define service quality dimensions
-            $dimensions = [
-                "Responsiveness", "Reliability", "Access and Facilities", "Communication",
-                "Costs", "Integrity", "Assurance", "Outcome"
+            // Define mapping of dimensions to descriptions
+            $dimension_descriptions = [
+                "SQD0" => "SQD0: I am satisfied with the service that I availed.",
+                "Responsiveness" => "SQD1: I spent a reasonable amount of time for my transaction.",
+                "Reliability" => "SQD2: The office followed the transaction's requirements and steps based on the information provided.",
+                "Access and Facilities" => "SQD3: The steps (including payment) I needed to do for my transaction were easy and simple.",
+                "Communication" => "SQD4: I easily found information about my transaction from the office or its website.",
+                "Costs" => "SQD5: I paid a reasonable amount of fees for my transaction. (If service was free, mark the N/A column)",
+                "Integrity" => "SQD6: I feel the office was fair to everyone, or 'walang palakasan', during my transaction.",
+                "Assurance" => "SQD7: I was treated courteously by the staff, and (if asked for help) the staff was helpful.",
+                "Outcome" => "SQD8: I got what I needed from the government office, or (if denied) denial of request was sufficiently explained to me."
             ];
 
             // Define response levels with corresponding values
@@ -865,7 +872,6 @@ if (!isset($_SESSION['user_id'])) {
                 $weighted_scores[$dimension] = ($weighted_scores[$dimension] ?? 0) + ($levels[$level] * $count);
             }
         ?>
-
         <!-- Service Quality Dimensions Summary Table -->
         <h3>Service Quality Dimensions (SQD) SUMMARY</h3>
         <table class="table table-bordered">
@@ -884,10 +890,10 @@ if (!isset($_SESSION['user_id'])) {
                 $overall_percentage_total = 0;
                 $dimension_count = 0;
                 
-                foreach ($dimensions as $dimension): 
+                foreach ($dimension_descriptions as $dimension => $description): 
                 ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($dimension); ?></td>
+                        <td><?php echo htmlspecialchars($description); ?></td>
                         <?php $row_total = $total_per_dimension[$dimension] ?? 0; ?>
                         <?php foreach (array_keys($levels) as $level): ?>
                             <td>
@@ -952,7 +958,7 @@ if (!isset($_SESSION['user_id'])) {
                     </td>
                 </tr>
             </tbody>
-        </table>    
+        </table>
     </div>  
 </body>
 </html>
