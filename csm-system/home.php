@@ -4,7 +4,7 @@ include 'db.php'; // Include database connection
 
 // Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: http://csm-system.free.nf/");
+    header("Location: index.php");
     exit();
 }
 ?>
@@ -199,7 +199,7 @@ if (!isset($_SESSION['user_id'])) {
                             <div class="border rounded p-3 shadow-sm">
                                 <h6 class="text-primary">Service Quality Dimensions</h6>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD0: Responsiveness</label>
+                                    <label class="form-label">SQD0: I am satisfied with the service that I availed.</label>
                                     <input type="hidden" name="sqd0" value="SQD0"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="sqd0" value="Strongly Agree" required>
@@ -227,7 +227,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD1: Responsiveness</label>
+                                    <label class="form-label">SQD1: I spent a reasonable amount of time for my transaction.</label>
                                     <input type="hidden" name="respo" value="Responsiveness"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="responsiveness" value="Strongly Agree" required>
@@ -255,7 +255,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD2: Reliability</label>
+                                    <label class="form-label">SQD2: The office followed the transaction's requirements and steps based on the information provided.</label>
                                     <input type="hidden" name="relia" value="Reliability"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="reliability" value="Strongly Agree" required>
@@ -283,7 +283,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD3: Access and Facilities</label>
+                                    <label class="form-label">SQD3: The steps (including payment) I needed to do for my transaction were easy and simple.</label>
                                     <input type="hidden" name="acce" value="Access and Facilities"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="access" value="Strongly Agree" required>
@@ -311,7 +311,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD4: Communication</label>
+                                    <label class="form-label">SQD4: I easily found information about my transaction from the office or its website</label>
                                     <input type="hidden" name="commu" value="Communication"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="communication" value="Strongly Agree" required>
@@ -339,7 +339,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD5: Costs</label>
+                                    <label class="form-label">SQD5: I paid a reasonable amount of fees for my transaction. (If service was free, mark the N/A column)</label>
                                     <input type="hidden" name="cost" value="Costs"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="costs" value="Strongly Agree" required>
@@ -367,7 +367,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD6: Integrity</label>
+                                    <label class="form-label">SQD6: I feel the office was fair to everyone, or "walang palakasan", during my transaction.</label>
                                     <input type="hidden" name="integ" value="Integrity"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="integrity" value="Strongly Agree" required>
@@ -395,7 +395,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD7: Assurance</label>
+                                    <label class="form-label">SQD7: I was treated ciurteously by the staff, and (if asked for help) the staff was helpful.</label>
                                     <input type="hidden" name="assur" value="Assurance"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="assurance" value="Strongly Agree" required>
@@ -423,7 +423,7 @@ if (!isset($_SESSION['user_id'])) {
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">SQD8: Outcome</label>
+                                    <label class="form-label">SQD8: I got what I needed from the government office, or (if denied) denial of request was sufficiently explained to me.</label>
                                     <input type="hidden" name="out" value="Outcome"> 
                                     <div class="form-check">
                                         <input class="form-check-input custom-radio" type="radio" name="outcome" value="Strongly Agree" required>
